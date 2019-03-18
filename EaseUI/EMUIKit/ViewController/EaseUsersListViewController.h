@@ -10,6 +10,18 @@
  * from Hyphenate Inc.
  */
 
+/*!
+ *  \~chinese
+ *  通话类型
+ *
+ *  \~english
+ *  Call type
+ */
+typedef enum {
+    EMCallTypeVoice = 0,    /*! \~chinese 实时语音 \~english Voice call */
+    EMCallTypeVideo,        /*! \~chinese 实时视频 \~english Video call */
+} EMCallType;
+
 #import "EaseRefreshTableViewController.h"
 
 #import "EaseUserModel.h"
