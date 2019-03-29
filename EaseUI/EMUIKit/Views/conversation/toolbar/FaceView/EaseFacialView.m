@@ -15,6 +15,7 @@
 #import "EaseEmoji.h"
 #import "EaseFaceView.h"
 #import "EaseEmotionManager.h"
+#import "ZLEaseMessageManager.h"
 
 @interface UIButton (UIButtonImageWithLable)
 - (void) setImage:(UIImage *)image withTitle:(NSString *)title forState:(UIControlState)stateType;
@@ -91,9 +92,9 @@
     _emotion = emotion;
     if ([emotion isKindOfClass:[EaseEmotion class]]) {
         if (emotion.emotionType == EMEmotionGif) {
-            [_imageButton setImage:[UIImage imageNamed:emotion.emotionThumbnail] withTitle:emotion.emotionTitle forState:UIControlStateNormal];
+            [_imageButton setImage:[ZLEaseMessageManager imageWithCurrentBundleName:emotion.emotionThumbnail] withTitle:emotion.emotionTitle forState:UIControlStateNormal];
         } else if (emotion.emotionType == EMEmotionPng) {
-            [_imageButton setImage:[UIImage imageNamed:emotion.emotionThumbnail] forState:UIControlStateNormal];
+            [_imageButton setImage:[ZLEaseMessageManager imageWithCurrentBundleName:emotion.emotionThumbnail] forState:UIControlStateNormal];
             _imageButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
             [_imageButton setTitle:nil forState:UIControlStateNormal];
             [_imageButton setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
@@ -110,8 +111,8 @@
         [_imageButton setTitle:nil forState:UIControlStateNormal];
         [_imageButton setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
         [_imageButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
-        [_imageButton setImage:[UIImage imageNamed:@"EaseUIResource.bundle/faceDelete"] forState:UIControlStateNormal];
-        [_imageButton setImage:[UIImage imageNamed:@"EaseUIResource.bundle/faceDelete_select"] forState:UIControlStateHighlighted];
+        [_imageButton setImage:[ZLEaseMessageManager imageWithCurrentBundleName:@"faceDelete"] forState:UIControlStateNormal];
+        [_imageButton setImage:[ZLEaseMessageManager imageWithCurrentBundleName:@"faceDelete_select"] forState:UIControlStateHighlighted];
         [_imageButton addTarget:self action:@selector(sendEmotion:) forControlEvents:UIControlEventTouchUpInside];
     }
 }

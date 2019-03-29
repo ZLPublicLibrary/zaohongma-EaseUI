@@ -32,6 +32,8 @@
 @interface EaseLocationViewController : EaseViewController
 
 @property (nonatomic, assign) id<EMLocationViewDelegate> delegate;
+///选择坐标（展示发送按钮）
+@property (nonatomic,unsafe_unretained) BOOL select;
 
 - (instancetype)initWithLocation:(CLLocationCoordinate2D)locationCoordinate;
 

@@ -25,6 +25,7 @@
 #import "EMCDDeviceManager+ProximitySensor.h"
 #import "UIViewController+HUD.h"
 #import "EaseSDKHelper.h"
+#import "ZLEaseMessageManager.h"
 
 @interface EaseAtTarget : NSObject
 @property (nonatomic, copy) NSString    *userId;
@@ -300,6 +301,12 @@ shouldSendHasReadAckForMessage:(EMMessage *)message
 @end
 
 @interface EaseMessageViewController : EaseRefreshTableViewController<UINavigationControllerDelegate, UIImagePickerControllerDelegate, EMChatManagerDelegate, EMCDDeviceManagerDelegate, EMChatToolbarDelegate, EaseChatBarMoreViewDelegate, EMLocationViewDelegate,EMChatroomManagerDelegate, EaseMessageCellDelegate>
+
+/*!
+ @property
+ @brief 外置信息
+ */
+@property (strong, nonatomic) ZLEaseMessageManager *myManager;
 
 
 @property (weak, nonatomic) id<EaseMessageViewControllerDelegate> delegate;

@@ -27,6 +27,7 @@
 #import "EaseCustomMessageCell.h"
 #import "EaseLocalDefine.h"
 #import "EaseSDKHelper.h"
+#import "ZLEaseMessageManager.h"
 
 #define KHintAdjustY    50
 
@@ -87,7 +88,7 @@ typedef enum : NSUInteger {
     if (self) {
         _conversation = [[EMClient sharedClient].chatManager getConversation:conversationChatter type:conversationType createIfNotExist:YES];
         
-        _messageCountOfPage = 10;
+        _messageCountOfPage = 1000;
         _timeCellHeight = 30;
         _deleteConversationIfNull = YES;
         _scrollToBottomWhenAppear = YES;
@@ -97,6 +98,11 @@ typedef enum : NSUInteger {
     }
     
     return self;
+}
+
+- (void)setMyManager:(ZLEaseMessageManager *)myManager {
+    _myManager = myManager;
+    [self.tableView reloadData];
 }
 
 - (void)viewDidLoad {
@@ -110,7 +116,12 @@ typedef enum : NSUInteger {
     //Initialization
     CGFloat chatbarHeight = [EaseChatToolbar defaultHeight];
     EMChatToolbarType barType = self.conversation.type == EMConversationTypeChat ? EMChatToolbarTypeChat : EMChatToolbarTypeGroup;
-    self.chatToolbar = [[EaseChatToolbar alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - chatbarHeight - iPhoneX_BOTTOM_HEIGHT, self.view.frame.size.width, chatbarHeight) type:barType];
+    BOOL isBangDevice = NO;
+    if (@available(iOS 11.0, *)) {
+        isBangDevice = UIApplication.sharedApplication.delegate.window.safeAreaInsets.bottom;
+    }
+    CGFloat homeBarHeight = isBangDevice ? 30.0 : 0.01;
+    self.chatToolbar = [[EaseChatToolbar alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - chatbarHeight - homeBarHeight, self.view.frame.size.width, chatbarHeight) type:barType];
     self.chatToolbar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
     
     //Initializa the gesture recognizer
@@ -138,11 +149,11 @@ typedef enum : NSUInteger {
                                                  name:UIApplicationDidBecomeActiveNotification
                                                object:nil];
     
-    [[EaseBaseMessageCell appearance] setSendBubbleBackgroundImage:[[UIImage imageNamed:@"EaseUIResource.bundle/chat_sender_bg"] stretchableImageWithLeftCapWidth:5 topCapHeight:35]];
-    [[EaseBaseMessageCell appearance] setRecvBubbleBackgroundImage:[[UIImage imageNamed:@"EaseUIResource.bundle/chat_receiver_bg"] stretchableImageWithLeftCapWidth:35 topCapHeight:35]];
+    [[EaseBaseMessageCell appearance] setSendBubbleBackgroundImage:[[ZLEaseMessageManager imageWithCurrentBundleName:@"chat_sender_bg"] stretchableImageWithLeftCapWidth:5 topCapHeight:35]];
+    [[EaseBaseMessageCell appearance] setRecvBubbleBackgroundImage:[[ZLEaseMessageManager imageWithCurrentBundleName:@"chat_receiver_bg"] stretchableImageWithLeftCapWidth:35 topCapHeight:35]];
     
-    [[EaseBaseMessageCell appearance] setSendMessageVoiceAnimationImages:@[[UIImage imageNamed:@"EaseUIResource.bundle/chat_sender_audio_playing_full"], [UIImage imageNamed:@"EaseUIResource.bundle/chat_sender_audio_playing_000"], [UIImage imageNamed:@"EaseUIResource.bundle/chat_sender_audio_playing_001"], [UIImage imageNamed:@"EaseUIResource.bundle/chat_sender_audio_playing_002"], [UIImage imageNamed:@"EaseUIResource.bundle/chat_sender_audio_playing_003"]]];
-    [[EaseBaseMessageCell appearance] setRecvMessageVoiceAnimationImages:@[[UIImage imageNamed:@"EaseUIResource.bundle/chat_receiver_audio_playing_full"],[UIImage imageNamed:@"EaseUIResource.bundle/chat_receiver_audio_playing000"], [UIImage imageNamed:@"EaseUIResource.bundle/chat_receiver_audio_playing001"], [UIImage imageNamed:@"EaseUIResource.bundle/chat_receiver_audio_playing002"], [UIImage imageNamed:@"EaseUIResource.bundle/chat_receiver_audio_playing003"]]];
+    [[EaseBaseMessageCell appearance] setSendMessageVoiceAnimationImages:@[[ZLEaseMessageManager imageWithCurrentBundleName:@"chat_sender_audio_playing_full"], [ZLEaseMessageManager imageWithCurrentBundleName:@"chat_sender_audio_playing_000"], [ZLEaseMessageManager imageWithCurrentBundleName:@"chat_sender_audio_playing_001"], [ZLEaseMessageManager imageWithCurrentBundleName:@"chat_sender_audio_playing_002"], [ZLEaseMessageManager imageWithCurrentBundleName:@"chat_sender_audio_playing_003"]]];
+    [[EaseBaseMessageCell appearance] setRecvMessageVoiceAnimationImages:@[[ZLEaseMessageManager imageWithCurrentBundleName:@"chat_receiver_audio_playing_full"],[ZLEaseMessageManager imageWithCurrentBundleName:@"chat_receiver_audio_playing000"], [ZLEaseMessageManager imageWithCurrentBundleName:@"chat_receiver_audio_playing001"], [ZLEaseMessageManager imageWithCurrentBundleName:@"chat_receiver_audio_playing002"], [ZLEaseMessageManager imageWithCurrentBundleName:@"chat_receiver_audio_playing003"]]];
     
     [[EaseBaseMessageCell appearance] setAvatarSize:40.f];
     [[EaseBaseMessageCell appearance] setAvatarCornerRadius:20.f];
@@ -155,6 +166,9 @@ typedef enum : NSUInteger {
     self.tableView.estimatedRowHeight = 0;
     self.tableView.estimatedSectionHeaderHeight = 0;
     self.tableView.estimatedSectionFooterHeight = 0;
+    
+    self.tableView.backgroundColor = [UIColor colorWithRed:240 / 255.0 green:240 / 255.0 blue:240 / 255.0 alpha:1.0];
+    self.tableView.contentInset = UIEdgeInsetsMake(UIApplication.sharedApplication.statusBarFrame.size.height + 44.0, self.tableView.contentInset.left, self.tableView.contentInset.bottom, self.tableView.contentInset.right);
 }
 
 /*!
@@ -175,7 +189,7 @@ typedef enum : NSUInteger {
             [emotions addObject:emotion];
         }
         EaseEmotion *emotion = [emotions objectAtIndex:0];
-        EaseEmotionManager *manager= [[EaseEmotionManager alloc] initWithType:EMEmotionDefault emotionRow:3 emotionCol:7 emotions:emotions tagImage:[UIImage imageNamed:emotion.emotionId]];
+        EaseEmotionManager *manager= [[EaseEmotionManager alloc] initWithType:EMEmotionDefault emotionRow:3 emotionCol:7 emotions:emotions tagImage:[ZLEaseMessageManager imageWithCurrentBundleName:emotion.emotionId]];
         [self.faceView setEmotionManagers:@[manager]];
     }
 }
@@ -371,7 +385,12 @@ typedef enum : NSUInteger {
     }
     
     CGRect tableFrame = self.tableView.frame;
-    tableFrame.size.height = self.view.frame.size.height - _chatToolbar.frame.size.height - iPhoneX_BOTTOM_HEIGHT;
+    BOOL iPhoneX = NO;
+    if (@available(iOS 11.0, *)) {
+        iPhoneX = UIApplication.sharedApplication.delegate.window.safeAreaInsets.bottom;
+    }
+    CGFloat iPhoneXbottomInset = iPhoneX ? 34.0 : 0;
+    tableFrame.size.height = self.view.frame.size.height - _chatToolbar.frame.size.height - iPhoneXbottomInset;
     self.tableView.frame = tableFrame;
     if ([chatToolbar isKindOfClass:[EaseChatToolbar class]]) {
         [(EaseChatToolbar *)self.chatToolbar setDelegate:self];
@@ -1166,6 +1185,17 @@ typedef enum : NSUInteger {
     }
     
     sendCell.model = model;
+    
+    if (model.isSender) {
+        sendCell.messageTextColor = UIColor.whiteColor;
+        sendCell.avatarView.image = self.myManager.myIcon;
+    }else {
+        sendCell.messageTextColor = UIColor.blackColor;
+        sendCell.avatarView.image = self.myManager.sideIcon;
+    }
+    sendCell.messageNameIsHidden = YES;
+    sendCell.messageNameHeight = 10.0;
+    
     return sendCell;
 }
 
@@ -1648,6 +1678,7 @@ typedef enum : NSUInteger {
     
     EaseLocationViewController *locationController = [[EaseLocationViewController alloc] init];
     locationController.delegate = self;
+    locationController.select = YES;
     [self.navigationController pushViewController:locationController animated:YES];
 }
 
@@ -1886,7 +1917,7 @@ typedef enum : NSUInteger {
         }
         else{
             model = [[EaseMessageModel alloc] initWithMessage:message];
-            model.avatarImage = [UIImage imageNamed:@"EaseUIResource.bundle/user"];
+            model.avatarImage = [ZLEaseMessageManager imageWithCurrentBundleName:@"user"];
             model.failImageName = @"imageDownloadFail";
         }
         
@@ -2144,7 +2175,7 @@ typedef enum : NSUInteger {
                     }
                     else{
                         model = [[EaseMessageModel alloc] initWithMessage:message];
-                        model.avatarImage = [UIImage imageNamed:@"EaseUIResource.bundle/user"];
+                        model.avatarImage = [ZLEaseMessageManager imageWithCurrentBundleName:@"user"];
                         model.failImageName = @"imageDownloadFail";
                     }
                     
@@ -2169,7 +2200,7 @@ typedef enum : NSUInteger {
         }
         else{
             model = [[EaseMessageModel alloc] initWithMessage:aMessage];
-            model.avatarImage = [UIImage imageNamed:@"EaseUIResource.bundle/user"];
+            model.avatarImage = [ZLEaseMessageManager imageWithCurrentBundleName:@"user"];
             model.failImageName = @"imageDownloadFail";
         }
         if (model) {

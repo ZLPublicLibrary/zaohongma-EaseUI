@@ -17,6 +17,7 @@
 
 #import "EaseBubbleView+Gif.h"
 #import "IMessageModel.h"
+#import "ZLEaseMessageManager.h"
 
 @interface EaseCustomMessageCell ()
 
@@ -40,7 +41,7 @@
 {
     UIImage *image = model.image;
     if (!image) {
-        [self.bubbleView.imageView sd_setImageWithURL:[NSURL URLWithString:model.fileURLPath] placeholderImage:[UIImage imageNamed:model.failImageName]];
+        [self.bubbleView.imageView sd_setImageWithURL:[NSURL URLWithString:model.fileURLPath] placeholderImage:[ZLEaseMessageManager imageWithCurrentBundleName:model.failImageName]];
     } else {
         _bubbleView.imageView.image = image;
     }
@@ -56,7 +57,7 @@
 {
     [_bubbleView setupGifBubbleView];
     
-    _bubbleView.imageView.image = [UIImage imageNamed:@"imageDownloadFail"];
+    _bubbleView.imageView.image = [ZLEaseMessageManager imageWithCurrentBundleName:@"imageDownloadFail"];
 }
 
 - (void)updateCustomBubbleViewMargin:(UIEdgeInsets)bubbleMargin model:(id<IMessageModel>)model

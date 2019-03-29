@@ -22,6 +22,7 @@
 #import "EaseBubbleView+File.h"
 #import "EaseEmotionEscape.h"
 #import "EaseLocalDefine.h"
+#import "ZLEaseMessageManager.h"
 
 CGFloat const EaseMessageCellPadding = 10;
 
@@ -126,7 +127,7 @@ NSString *const EaseMessageCellIdentifierSendFile = @"EaseMessageCellSendFile";
     _statusButton.accessibilityIdentifier = @"status";
     _statusButton.translatesAutoresizingMaskIntoConstraints = NO;
     _statusButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
-    [_statusButton setImage:[UIImage imageNamed:@"EaseUIResource.bundle/messageSendFail"] forState:UIControlStateNormal];
+    [_statusButton setImage:[ZLEaseMessageManager imageWithCurrentBundleName:@"messageSendFail"] forState:UIControlStateNormal];
     [_statusButton addTarget:self action:@selector(statusAction) forControlEvents:UIControlEventTouchUpInside];
     _statusButton.hidden = YES;
     [self.contentView addSubview:_statusButton];
@@ -176,14 +177,14 @@ NSString *const EaseMessageCellIdentifierSendFile = @"EaseMessageCellSendFile";
             {
                 [_bubbleView setupImageBubbleView];
                 
-                _bubbleView.imageView.image = [UIImage imageNamed:@"EaseUIResource.bundle/imageDownloadFail"];
+                _bubbleView.imageView.image = [ZLEaseMessageManager imageWithCurrentBundleName:@"imageDownloadFail"];
             }
                 break;
             case EMMessageBodyTypeLocation:
             {
                 [_bubbleView setupLocationBubbleView];
                 
-                _bubbleView.locationImageView.image = [[UIImage imageNamed:@"EaseUIResource.bundle/chat_location_preview"] stretchableImageWithLeftCapWidth:10 topCapHeight:10];
+                _bubbleView.locationImageView.image = [[ZLEaseMessageManager imageWithCurrentBundleName:@"chat_location_preview"] stretchableImageWithLeftCapWidth:10 topCapHeight:10];
                 _bubbleView.locationLabel.font = _messageLocationFont;
                 _bubbleView.locationLabel.textColor = _messageLocationColor;
             }
@@ -200,7 +201,7 @@ NSString *const EaseMessageCellIdentifierSendFile = @"EaseMessageCellSendFile";
             {
                 [_bubbleView setupVideoBubbleView];
                 
-                _bubbleView.videoTagView.image = [UIImage imageNamed:@"EaseUIResource.bundle/messageVideo"];
+                _bubbleView.videoTagView.image = [ZLEaseMessageManager imageWithCurrentBundleName:@"messageVideo"];
             }
                 break;
             case EMMessageBodyTypeFile:
@@ -348,7 +349,7 @@ NSString *const EaseMessageCellIdentifierSendFile = @"EaseMessageCellSendFile";
                 if (!image) {
                     image = _model.image;
                     if (!image) {
-                        [_bubbleView.imageView sd_setImageWithURL:[NSURL URLWithString:_model.thumbnailFileURLPath] placeholderImage:[UIImage imageNamed:_model.failImageName]];
+                        [_bubbleView.imageView sd_setImageWithURL:[NSURL URLWithString:_model.thumbnailFileURLPath] placeholderImage:[ZLEaseMessageManager imageWithCurrentBundleName:_model.failImageName]];
                     } else {
                         _bubbleView.imageView.image = image;
                     }
@@ -369,7 +370,7 @@ NSString *const EaseMessageCellIdentifierSendFile = @"EaseMessageCellSendFile";
                         self.bubbleView.voiceImageView.image = self.model.isSender ?[self.sendMessageVoiceAnimationImages objectAtIndex:0] : [self.recvMessageVoiceAnimationImages objectAtIndex:0];
                         _bubbleView.voiceImageView.animationImages = self.model.isSender ? self.sendMessageVoiceAnimationImages:self.recvMessageVoiceAnimationImages;
                     } else {
-                        self.bubbleView.voiceImageView.image = self.model.isSender ?[UIImage imageNamed:@"EaseUIResource.bundle/chat_sender_audio_playing_full"]: [UIImage imageNamed:@"EaseUIResource.bundle/chat_receiver_audio_playing_full"];
+                        self.bubbleView.voiceImageView.image = self.model.isSender ?[ZLEaseMessageManager imageWithCurrentBundleName:@"chat_sender_audio_playing_full"]: [ZLEaseMessageManager imageWithCurrentBundleName:@"chat_receiver_audio_playing_full"];
                     }
                 }
                 if (!self.model.isSender) {
@@ -396,7 +397,7 @@ NSString *const EaseMessageCellIdentifierSendFile = @"EaseMessageCellSendFile";
                 if (!image) {
                     image = _model.image;
                     if (!image) {
-                        [_bubbleView.videoImageView sd_setImageWithURL:[NSURL URLWithString:_model.fileURLPath] placeholderImage:[UIImage imageNamed:_model.failImageName]];
+                        [_bubbleView.videoImageView sd_setImageWithURL:[NSURL URLWithString:_model.fileURLPath] placeholderImage:[ZLEaseMessageManager imageWithCurrentBundleName:_model.failImageName]];
                     } else {
                         _bubbleView.videoImageView.image = image;
                     }
@@ -407,7 +408,7 @@ NSString *const EaseMessageCellIdentifierSendFile = @"EaseMessageCellSendFile";
                 break;
             case EMMessageBodyTypeFile:
             {
-                _bubbleView.fileIconView.image = [UIImage imageNamed:_model.fileIconName];
+                _bubbleView.fileIconView.image = [ZLEaseMessageManager imageWithCurrentBundleName:_model.fileIconName];
                 _bubbleView.fileNameLabel.text = _model.fileName;
                 _bubbleView.fileSizeLabel.text = _model.fileSizeDes;
             }

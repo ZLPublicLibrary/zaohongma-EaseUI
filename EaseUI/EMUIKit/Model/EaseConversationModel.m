@@ -17,6 +17,7 @@
 #else
 #import <Hyphenate/EMConversation.h>
 #endif
+#import "ZLEaseMessageManager.h"
 
 @implementation EaseConversationModel
 
@@ -27,10 +28,10 @@
         _conversation = conversation;
         _title = _conversation.conversationId;
         if (conversation.type == EMConversationTypeChat) {
-            _avatarImage = [UIImage imageNamed:@"EaseUIResource.bundle/user"];
+            _avatarImage = [ZLEaseMessageManager imageWithCurrentBundleName:@"user"];
         }
         else{
-            _avatarImage = [UIImage imageNamed:@"EaseUIResource.bundle/group"];
+            _avatarImage = [ZLEaseMessageManager imageWithCurrentBundleName:@"group"];
         }
     }
     

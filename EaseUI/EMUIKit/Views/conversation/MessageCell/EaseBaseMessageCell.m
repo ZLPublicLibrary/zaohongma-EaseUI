@@ -285,7 +285,7 @@
                     _hasRead.text = [NSString stringWithFormat:@"%@ 已读", @(self.model.dingReadCount)];
                 } else if (self.model.isMessageRead) {
                     _hasRead.hidden = NO;
-                    _hasRead.text = NSLocalizedString(@"hasRead", @"Read");
+                    _hasRead.text = @"已读";//NSLocalizedString(@"hasRead", @"Read");
                 } else if (self.model.isDing) {
                     _hasRead.hidden = NO;
                     _hasRead.text = [NSString stringWithFormat:@"%@ %@", @(self.model.dingReadCount), NSLocalizedString(@"hasRead", @"Read")];

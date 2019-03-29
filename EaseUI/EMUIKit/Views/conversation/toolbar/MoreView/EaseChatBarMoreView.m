@@ -11,8 +11,9 @@
  */
 
 #import "EaseChatBarMoreView.h"
+#import "ZLEaseMessageManager.h"
 
-#define CHAT_BUTTON_SIZE CGSizeMake(50,60)
+#define CHAT_BUTTON_SIZE CGSizeMake(50,70)
 #define INSETS 10
 #define MOREVIEW_COL 4
 #define MOREVIEW_ROW 2
@@ -73,12 +74,20 @@
     //self.backgroundColor = [UIColor clearColor];
     self.accessibilityIdentifier = @"more_view";
     
+    
+    
     _scrollview = [[UIScrollView alloc] init];
     _scrollview.pagingEnabled = YES;
+    _scrollview.backgroundColor = [UIColor colorWithRed:248 / 255.0 green:248 / 255.0 blue:248 / 255.0 alpha:1.0];
     _scrollview.showsHorizontalScrollIndicator = NO;
     _scrollview.showsVerticalScrollIndicator = NO;
     _scrollview.delegate = self;
     [self addSubview:_scrollview];
+    
+    CALayer *layer = [CALayer layer];
+    layer.backgroundColor = [UIColor colorWithRed:220 / 255.0 green:220 / 255.0 blue:220 / 255.0 alpha:1.0].CGColor;
+    layer.frame = CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, 0.5);
+    [_scrollview.layer addSublayer:layer];
     
     _pageControl = [[UIPageControl alloc] init];
     _pageControl.currentPage = 0;
@@ -87,62 +96,62 @@
     
     CGFloat insets = (self.frame.size.width - 4 * CHAT_BUTTON_SIZE.width) / 5;
     
-    _photoButton = [self btnWithImage:[UIImage imageNamed:@"EaseUIResource.bundle/chatBar_colorMore_photo"]
-                     highlightedImage:[UIImage imageNamed:@"EaseUIResource.bundle/chatBar_colorMore_photoSelected"]
+    _photoButton = [self btnWithImage:[ZLEaseMessageManager imageWithCurrentBundleName:@"chatBar_colorMore_photo"]
+                     highlightedImage:[ZLEaseMessageManager imageWithCurrentBundleName:@"chatBar_colorMore_photoSelected"]
                                 title:@"相册"];
-
+    
     _photoButton.accessibilityIdentifier = @"image";
-    [_photoButton setFrame:CGRectMake(insets, 10, CHAT_BUTTON_SIZE.width , CHAT_BUTTON_SIZE.height)];
+    [_photoButton setFrame:CGRectMake(insets, 30, CHAT_BUTTON_SIZE.width , CHAT_BUTTON_SIZE.height)];
     [_photoButton addTarget:self action:@selector(photoAction) forControlEvents:UIControlEventTouchUpInside];
     _photoButton.tag = MOREVIEW_BUTTON_TAG;
     [_scrollview addSubview:_photoButton];
     
-    _locationButton = [self btnWithImage:[UIImage imageNamed:@"EaseUIResource.bundle/chatBar_colorMore_location"]
-                        highlightedImage:[UIImage imageNamed:@"EaseUIResource.bundle/chatBar_colorMore_locationSelected"]
+    _locationButton = [self btnWithImage:[ZLEaseMessageManager imageWithCurrentBundleName:@"chatBar_colorMore_location"]
+                        highlightedImage:[ZLEaseMessageManager imageWithCurrentBundleName:@"chatBar_colorMore_locationSelected"]
                                    title:@"位置"];
     _locationButton.accessibilityIdentifier = @"location";
-    [_locationButton setFrame:CGRectMake(insets * 2 + CHAT_BUTTON_SIZE.width, 10, CHAT_BUTTON_SIZE.width , CHAT_BUTTON_SIZE.height)];
+    [_locationButton setFrame:CGRectMake(insets * 2 + CHAT_BUTTON_SIZE.width, 30, CHAT_BUTTON_SIZE.width , CHAT_BUTTON_SIZE.height)];
     [_locationButton addTarget:self action:@selector(locationAction) forControlEvents:UIControlEventTouchUpInside];
     _locationButton.tag = MOREVIEW_BUTTON_TAG + 1;
     [_scrollview addSubview:_locationButton];
     
-    _takePicButton = [self btnWithImage:[UIImage imageNamed:@"EaseUIResource.bundle/chatBar_colorMore_camera"]
-                       highlightedImage:[UIImage imageNamed:@"EaseUIResource.bundle/chatBar_colorMore_cameraSelected"]
+    _takePicButton = [self btnWithImage:[ZLEaseMessageManager imageWithCurrentBundleName:@"chatBar_colorMore_camera"]
+                       highlightedImage:[ZLEaseMessageManager imageWithCurrentBundleName:@"chatBar_colorMore_cameraSelected"]
                                   title:@"拍照"];
-    [_takePicButton setFrame:CGRectMake(insets * 3 + CHAT_BUTTON_SIZE.width * 2, 10, CHAT_BUTTON_SIZE.width , CHAT_BUTTON_SIZE.height)];
+    [_takePicButton setFrame:CGRectMake(insets * 3 + CHAT_BUTTON_SIZE.width * 2, 30, CHAT_BUTTON_SIZE.width , CHAT_BUTTON_SIZE.height)];
     [_takePicButton addTarget:self action:@selector(takePicAction) forControlEvents:UIControlEventTouchUpInside];
     _takePicButton.tag = MOREVIEW_BUTTON_TAG + 2;
     _maxIndex = 2;
     [_scrollview addSubview:_takePicButton];
     
-    _audioCallButton = [self btnWithImage:[UIImage imageNamed:@"EaseUIResource.bundle/chatBar_colorMore_audioCall"]
-                         highlightedImage:[UIImage imageNamed:@"EaseUIResource.bundle/chatBar_colorMore_audioCallSelected"]
-                                    title:nil];
-    [_audioCallButton setFrame:CGRectMake(insets * 4 + CHAT_BUTTON_SIZE.width * 3, 10, CHAT_BUTTON_SIZE.width , CHAT_BUTTON_SIZE.height)];
-    [_audioCallButton addTarget:self action:@selector(takeAudioCallAction) forControlEvents:UIControlEventTouchUpInside];
-    _audioCallButton.tag = MOREVIEW_BUTTON_TAG + 3;
-    [_scrollview addSubview:_audioCallButton];
+    //    _audioCallButton = [self btnWithImage:[ZLEaseMessageManager imageWithCurrentBundleName:@"xxxx"][UIImage imageNamed:@"EaseUIResource.bundle/chatBar_colorMore_audioCall"]
+    //                         highlightedImage:[ZLEaseMessageManager imageWithCurrentBundleName:@"xxxx"][UIImage imageNamed:@"EaseUIResource.bundle/chatBar_colorMore_audioCallSelected"]
+    //                                    title:nil];
+    //    [_audioCallButton setFrame:CGRectMake(insets * 4 + CHAT_BUTTON_SIZE.width * 3, 10, CHAT_BUTTON_SIZE.width , CHAT_BUTTON_SIZE.height)];
+    //    [_audioCallButton addTarget:self action:@selector(takeAudioCallAction) forControlEvents:UIControlEventTouchUpInside];
+    //    _audioCallButton.tag = MOREVIEW_BUTTON_TAG + 3;
+    //    [_scrollview addSubview:_audioCallButton];
     
-    _videoCallButton = [self btnWithImage:[UIImage imageNamed:@"EaseUIResource.bundle/chatBar_colorMore_videoCall"]
-                         highlightedImage:[UIImage imageNamed:@"EaseUIResource.bundle/chatBar_colorMore_videoCallSelected"]
-                                    title:nil];
-    [_videoCallButton setFrame:CGRectMake(insets, 10 * 2 + CHAT_BUTTON_SIZE.height + 10, CHAT_BUTTON_SIZE.width , CHAT_BUTTON_SIZE.height)];
-    [_videoCallButton addTarget:self action:@selector(takeVideoCallAction) forControlEvents:UIControlEventTouchUpInside];
-    _videoCallButton.tag =MOREVIEW_BUTTON_TAG + 4;
-    _maxIndex = 4;
-    [_scrollview addSubview:_videoCallButton];
-
+    //    _videoCallButton = [self btnWithImage:[ZLEaseMessageManager imageWithCurrentBundleName:@"xxxx"][UIImage imageNamed:@"EaseUIResource.bundle/chatBar_colorMore_videoCall"]
+    //                         highlightedImage:[ZLEaseMessageManager imageWithCurrentBundleName:@"xxxx"][UIImage imageNamed:@"EaseUIResource.bundle/chatBar_colorMore_videoCallSelected"]
+    //                                    title:nil];
+    //    [_videoCallButton setFrame:CGRectMake(insets, 10 * 2 + CHAT_BUTTON_SIZE.height + 10, CHAT_BUTTON_SIZE.width , CHAT_BUTTON_SIZE.height)];
+    //    [_videoCallButton addTarget:self action:@selector(takeVideoCallAction) forControlEvents:UIControlEventTouchUpInside];
+    //    _videoCallButton.tag =MOREVIEW_BUTTON_TAG + 4;
+    //    _maxIndex = 4;
+    //    [_scrollview addSubview:_videoCallButton];
+    
     CGRect frame = self.frame;
-    frame.size.height = 150;
-    if (type == EMChatToolbarTypeChat) {
-        [_audioCallButton setTitle:@"语音" forState:UIControlStateNormal];
-        [_videoCallButton setTitle:@"视频" forState:UIControlStateNormal];
-    }
-    else if (type == EMChatToolbarTypeGroup)
-    {
-        [_audioCallButton setTitle:@"多人会议" forState:UIControlStateNormal];
-        [_videoCallButton setTitle:@"互动会议" forState:UIControlStateNormal];
-    }
+    frame.size.height = 226.0;
+    //    if (type == EMChatToolbarTypeChat) {
+    //        [_audioCallButton setTitle:@"语音" forState:UIControlStateNormal];
+    //        [_videoCallButton setTitle:@"视频" forState:UIControlStateNormal];
+    //    }
+    //    else if (type == EMChatToolbarTypeGroup)
+    //    {
+    //        [_audioCallButton setTitle:@"多人会议" forState:UIControlStateNormal];
+    //        [_videoCallButton setTitle:@"互动会议" forState:UIControlStateNormal];
+    //    }
     self.frame = frame;
     _scrollview.frame = CGRectMake(0, 0, CGRectGetWidth(frame), CGRectGetHeight(frame));
     _pageControl.frame = CGRectMake(0, CGRectGetHeight(frame) - 20, CGRectGetWidth(frame), 20);
@@ -155,10 +164,10 @@
     [btn setImage:aImage forState:UIControlStateNormal];
     [btn setImage:aHighLightedImage forState:UIControlStateHighlighted];
     [btn setTitle:aTitle forState:UIControlStateNormal];
-    [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [btn setTitleColor:[UIColor colorWithRed:99 / 255.0 green:99 / 255.0 blue:99 / 255.0 alpha:1.0] forState:UIControlStateNormal];
     btn.titleLabel.font = [UIFont systemFontOfSize: 12.0];
-    btn.imageEdgeInsets = UIEdgeInsetsMake(-10, 0, 20, 0);
-    btn.titleEdgeInsets = UIEdgeInsetsMake(14, -60, -20, 0);
+    btn.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 20, 0);
+    btn.titleEdgeInsets = UIEdgeInsetsMake(31, -60, -26, 0);
     return btn;
 }
 
@@ -181,7 +190,7 @@
     [_scrollview setContentSize:CGSizeMake(CGRectGetWidth(self.frame) * (page + 1), CGRectGetHeight(self.frame))];
     [_pageControl setNumberOfPages:page + 1];
     if (_maxIndex >=5) {
-        frame.size.height = 150;
+        frame.size.height = 226.0;
         _scrollview.frame = CGRectMake(0, 0, CGRectGetWidth(frame), CGRectGetHeight(frame));
         _pageControl.frame = CGRectMake(0, CGRectGetHeight(frame) - 20, CGRectGetWidth(frame), 20);
     }
@@ -229,9 +238,9 @@
     }
     _maxIndex--;
     if (_maxIndex >=5) {
-        frame.size.height = 150;
+        frame.size.height = 226.0;
     } else {
-        frame.size.height = 80;
+        frame.size.height = 226.0;
     }
     self.frame = frame;
     _scrollview.frame = CGRectMake(0, 0, CGRectGetWidth(frame), CGRectGetHeight(frame));
@@ -265,37 +274,37 @@
 }
 
 /*
-- (void)setMoreViewButtonImages:(NSArray *)moreViewButtonImages
-{
-    _moreViewButtonImages = moreViewButtonImages;
-    if ([_moreViewButtonImages count] > 0) {
-        for (UIView *view in self.subviews) {
-            if ([view isKindOfClass:[UIButton class]]) {
-                UIButton *button = (UIButton *)view;
-                if (button.tag < [_moreViewButtonImages count]) {
-                    NSString *imageName = [_moreViewButtonImages objectAtIndex:button.tag];
-                    [button setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
-                }
-            }
-        }
-    }
-}
-
-- (void)setMoreViewButtonHignlightImages:(NSArray *)moreViewButtonHignlightImages
-{
-    _moreViewButtonHignlightImages = moreViewButtonHignlightImages;
-    if ([_moreViewButtonHignlightImages count] > 0) {
-        for (UIView *view in self.subviews) {
-            if ([view isKindOfClass:[UIButton class]]) {
-                UIButton *button = (UIButton *)view;
-                if (button.tag < [_moreViewButtonHignlightImages count]) {
-                    NSString *imageName = [_moreViewButtonHignlightImages objectAtIndex:button.tag];
-                    [button setImage:[UIImage imageNamed:imageName] forState:UIControlStateHighlighted];
-                }
-            }
-        }
-    }
-}*/
+ - (void)setMoreViewButtonImages:(NSArray *)moreViewButtonImages
+ {
+ _moreViewButtonImages = moreViewButtonImages;
+ if ([_moreViewButtonImages count] > 0) {
+ for (UIView *view in self.subviews) {
+ if ([view isKindOfClass:[UIButton class]]) {
+ UIButton *button = (UIButton *)view;
+ if (button.tag < [_moreViewButtonImages count]) {
+ NSString *imageName = [_moreViewButtonImages objectAtIndex:button.tag];
+ [button setImage:[ZLEaseMessageManager imageWithCurrentBundleName:@"xxxx"][UIImage imageNamed:imageName] forState:UIControlStateNormal];
+ }
+ }
+ }
+ }
+ }
+ 
+ - (void)setMoreViewButtonHignlightImages:(NSArray *)moreViewButtonHignlightImages
+ {
+ _moreViewButtonHignlightImages = moreViewButtonHignlightImages;
+ if ([_moreViewButtonHignlightImages count] > 0) {
+ for (UIView *view in self.subviews) {
+ if ([view isKindOfClass:[UIButton class]]) {
+ UIButton *button = (UIButton *)view;
+ if (button.tag < [_moreViewButtonHignlightImages count]) {
+ NSString *imageName = [_moreViewButtonHignlightImages objectAtIndex:button.tag];
+ [button setImage:[ZLEaseMessageManager imageWithCurrentBundleName:@"xxxx"][UIImage imageNamed:imageName] forState:UIControlStateHighlighted];
+ }
+ }
+ }
+ }
+ }*/
 
 #pragma mark - UIScrollViewDelegate
 

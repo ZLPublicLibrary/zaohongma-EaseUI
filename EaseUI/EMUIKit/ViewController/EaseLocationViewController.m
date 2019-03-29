@@ -16,6 +16,7 @@
 
 #import "UIViewController+HUD.h"
 #import "EaseLocalDefine.h"
+#import "ZLEaseMessageManager.h"
 
 static EaseLocationViewController *defaultLocation = nil;
 
@@ -29,6 +30,10 @@ static EaseLocationViewController *defaultLocation = nil;
 }
 
 @property (strong, nonatomic) NSString *addressString;
+///返回按钮
+@property (nonatomic,weak) UIButton *gobackButton;
+///发送
+@property (nonatomic,weak) UIButton *sendButton;
 
 @end
 
@@ -71,10 +76,10 @@ static EaseLocationViewController *defaultLocation = nil;
 {
     [super viewDidLoad];
     
-    self.title = @"位置信息";
+    self.title = @"查看位置";// NSEaseLocalizedString(@"location.messageType", @"location message");
     
     UIButton *backButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
-    [backButton setImage:[UIImage imageNamed:@"EaseUIResource.bundle/back"] forState:UIControlStateNormal];
+    [backButton setImage:[ZLEaseMessageManager imageWithCurrentBundleName:@"back"] forState:UIControlStateNormal];
     [backButton addTarget:self.navigationController action:@selector(popViewControllerAnimated:) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *backItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     [self.navigationItem setLeftBarButtonItem:backItem];
@@ -89,7 +94,7 @@ static EaseLocationViewController *defaultLocation = nil;
         _mapView.showsUserLocation = YES;//显示当前位置
         
         UIButton *sendButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 60, 44)];
-        [sendButton setTitle:@"发送" forState:UIControlStateNormal];
+        [sendButton setTitle:@"发送" forState:UIControlStateNormal];//NSEaseLocalizedString(@"send", @"Send")
         sendButton.accessibilityIdentifier = @"send_location";
         [sendButton setTitleColor:[UIColor colorWithRed:32 / 255.0 green:134 / 255.0 blue:158 / 255.0 alpha:1.0] forState:UIControlStateNormal];
         [sendButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
@@ -102,6 +107,40 @@ static EaseLocationViewController *defaultLocation = nil;
     else{
         [self removeToLocation:_currentLocationCoordinate];
     }
+    [self gobackButton];
+    if (self.select) {
+        [self sendButton];
+    }
+}
+
+#pragma mark - Lazy
+- (UIButton *)gobackButton {
+    if (!_gobackButton) {
+        UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0, UIApplication.sharedApplication.statusBarFrame.size.height, 50.0, 40.0)];
+        [button setImage:[ZLEaseMessageManager imageWithCurrentBundleName:@"返回"] forState:UIControlStateNormal];
+        [button addTarget:self action:@selector(gobackButtonAction) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:button];
+        _gobackButton = button;
+    }
+    return _gobackButton;
+}
+- (UIButton *)sendButton {
+    if (!_sendButton) {
+        UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(UIScreen.mainScreen.bounds.size.width - 75.0, UIScreen.mainScreen.bounds.size.height - 160.0, 60.0, 60.0)];
+        [button setImage:[ZLEaseMessageManager imageWithCurrentBundleName:@"发送"] forState:UIControlStateNormal];
+        [button addTarget:self action:@selector(sendButtonAction) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:button];
+        _sendButton = button;
+    }
+    return _sendButton;
+}
+
+#pragma mark - Action
+- (void)gobackButtonAction {
+    [self.navigationController popViewControllerAnimated:YES];
+}
+- (void)sendButtonAction {
+    [self sendLocation];
 }
 
 - (void)didReceiveMemoryWarning
@@ -143,8 +182,8 @@ static EaseLocationViewController *defaultLocation = nil;
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil
                                                             message:[error.userInfo objectForKey:NSLocalizedRecoverySuggestionErrorKey]
                                                            delegate:nil
-                                                  cancelButtonTitle:@"确定"
-                                                  otherButtonTitles:nil, nil];
+                                                  cancelButtonTitle:@"好的"
+                                                  otherButtonTitles:nil, nil];//NSEaseLocalizedString(@"ok", @"OK")
         [alertView show];
     }
 }
@@ -191,7 +230,7 @@ static EaseLocationViewController *defaultLocation = nil;
         self.navigationItem.rightBarButtonItem.enabled = NO;
     }
     
-    [self showHudInView:self.view hint:@"正在定位..."];
+    [self showHudInView:self.view hint:@"定位中"];//NSEaseLocalizedString(@"location.ongoning", @"locating...")
 }
 
 /*!
