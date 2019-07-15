@@ -9,6 +9,17 @@
 
 @implementation ZLEaseMessageManager
 
+///实例化
++ (instancetype)shared {
+    static ZLEaseMessageManager *manager = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        manager = [self new];
+    });
+    return manager;
+}
+
+
 ///加载当前Bundle内的图片
 + (UIImage *)imageWithCurrentBundleName:(NSString *)imageName {
     NSBundle *currentBundle = [NSBundle bundleForClass:[self class]];

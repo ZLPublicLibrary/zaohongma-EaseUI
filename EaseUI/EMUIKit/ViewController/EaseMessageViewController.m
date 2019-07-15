@@ -25,6 +25,7 @@
 #import "EaseEmoji.h"
 #import "EaseEmotionEscape.h"
 #import "EaseCustomMessageCell.h"
+#import "ZLEaseUIPositionCell.h"
 #import "EaseLocalDefine.h"
 #import "EaseSDKHelper.h"
 #import "ZLEaseMessageManager.h"
@@ -1173,6 +1174,21 @@ typedef enum : NSUInteger {
         }
     }
     
+    if (model.bodyType == EMMessageBodyTypeText && model.message.ext) {
+        NSString *CellIdentifier = [ZLEaseUIPositionCell cellIdentifierWithModel:model];
+        //send cell
+        ZLEaseUIPositionCell *sendCell = (ZLEaseUIPositionCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        
+        // Configure the cell...
+        if (sendCell == nil) {
+            sendCell = [[ZLEaseUIPositionCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier model:model];
+            sendCell.selectionStyle = UITableViewCellSelectionStyleNone;
+        }
+        sendCell.model = model;
+        sendCell.delegate = self;
+        return sendCell;
+    }
+    
     NSString *CellIdentifier = [EaseMessageCell cellIdentifierWithModel:model];
     
     EaseBaseMessageCell *sendCell = (EaseBaseMessageCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -1209,6 +1225,9 @@ typedef enum : NSUInteger {
     }
     else{
         id<IMessageModel> model = object;
+        if (model.bodyType == EMMessageBodyTypeText && model.message.ext) {
+            return [ZLEaseUIPositionCell cellHeightWithModel:model];
+        }
         if (_delegate && [_delegate respondsToSelector:@selector(messageViewController:heightForMessageModel:withCellWidth:)]) {
             CGFloat height = [_delegate messageViewController:self heightForMessageModel:model withCellWidth:tableView.frame.size.width];
             if (height) {

@@ -43,6 +43,10 @@
 @property (nonatomic, strong) UIButton *photoButton;
 @property (nonatomic, strong) UIButton *takePicButton;
 @property (nonatomic, strong) UIButton *locationButton;
+///线上简历/发送名片
+@property (nonatomic, strong) UIButton *onlineResumeButton;
+///线下简历/发送职位
+@property (nonatomic, strong) UIButton *offlineResumeButton;
 @property (nonatomic, strong) UIButton *videoButton;
 @property (nonatomic, strong) UIButton *audioCallButton;
 @property (nonatomic, strong) UIButton *videoCallButton;
@@ -123,6 +127,24 @@
     _takePicButton.tag = MOREVIEW_BUTTON_TAG + 2;
     _maxIndex = 2;
     [_scrollview addSubview:_takePicButton];
+    ZLEaseMessageManager *manager = [ZLEaseMessageManager shared];
+    _onlineResumeButton = [self btnWithImage:[ZLEaseMessageManager imageWithCurrentBundleName:manager.type == 1 ?  @"线上简历" : @"名片"]
+                       highlightedImage:[ZLEaseMessageManager imageWithCurrentBundleName:manager.type == 1 ?  @"线上简历" : @"名片"]
+                                       title:manager.type == 1 ?  @"线上简历" : @"名片"];
+    [_onlineResumeButton setFrame:CGRectMake(insets * 4 + CHAT_BUTTON_SIZE.width * 3, 30, CHAT_BUTTON_SIZE.width , CHAT_BUTTON_SIZE.height)];
+    [_onlineResumeButton addTarget:self action:@selector(sendResumeAction:) forControlEvents:UIControlEventTouchUpInside];
+    _onlineResumeButton.tag = MOREVIEW_BUTTON_TAG + 3;
+    _maxIndex = 3;
+    [_scrollview addSubview:_onlineResumeButton];
+    
+    _offlineResumeButton = [self btnWithImage:[ZLEaseMessageManager imageWithCurrentBundleName:manager.type == 1 ?  @"附件简历" : @"职位"]
+                       highlightedImage:[ZLEaseMessageManager imageWithCurrentBundleName:manager.type == 1 ?  @"附件简历" : @"职位"]
+                                  title:manager.type == 1 ?  @"附件简历" : @"职位"];
+    [_offlineResumeButton setFrame:CGRectMake(insets, 60 + CHAT_BUTTON_SIZE.height, CHAT_BUTTON_SIZE.width , CHAT_BUTTON_SIZE.height)];
+    [_offlineResumeButton addTarget:self action:@selector(sendResumeAction:) forControlEvents:UIControlEventTouchUpInside];
+    _offlineResumeButton.tag = MOREVIEW_BUTTON_TAG + 4;
+    _maxIndex = 4;
+    [_scrollview addSubview:_offlineResumeButton];
     
     //    _audioCallButton = [self btnWithImage:[ZLEaseMessageManager imageWithCurrentBundleName:@"xxxx"][UIImage imageNamed:@"EaseUIResource.bundle/chatBar_colorMore_audioCall"]
     //                         highlightedImage:[ZLEaseMessageManager imageWithCurrentBundleName:@"xxxx"][UIImage imageNamed:@"EaseUIResource.bundle/chatBar_colorMore_audioCallSelected"]
@@ -158,6 +180,23 @@
     _pageControl.hidden = _pageControl.numberOfPages<=1;
 }
 
+- (void)sendResumeAction:(UIButton *)sender {
+    if ([ZLEaseMessageManager shared].type == 1) {
+        if ([ZLEaseMessageManager shared].sendResume) {
+            [ZLEaseMessageManager shared].sendResume(sender == self.onlineResumeButton ? 0 : 1);
+        }
+        return;
+    }
+    UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"线下简历"
+                                                                   message:nil
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
+                                                          handler:^(UIAlertAction * action) {}];
+    
+    [alert addAction:defaultAction];
+    [UIApplication.sharedApplication.delegate.window.rootViewController presentViewController:alert animated:YES completion:nil];
+}
 
 - (UIButton *)btnWithImage:(UIImage *)aImage highlightedImage:(UIImage *)aHighLightedImage title:(NSString *)aTitle {
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
