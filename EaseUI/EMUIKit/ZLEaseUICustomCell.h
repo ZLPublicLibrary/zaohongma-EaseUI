@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface ZLEaseUIPositionCell : EaseBaseMessageCell
+@interface ZLEaseUICustomCell : EaseBaseMessageCell
 
 @end
 

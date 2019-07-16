@@ -144,18 +144,20 @@
     _previousTextViewContentHeight = [self _getTextViewContentH:_inputTextView];
     [_toolbarView addSubview:_inputTextView];
     
-    //change input type
-    UIButton *styleChangeButton = [[UIButton alloc] init];
-    styleChangeButton.accessibilityIdentifier = @"style";
-    styleChangeButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
-    [styleChangeButton setImage:[ZLEaseMessageManager imageWithCurrentBundleName:@"chatBar_record"] forState:UIControlStateNormal];
-    [styleChangeButton setImage:[ZLEaseMessageManager imageWithCurrentBundleName:@"chatBar_keyboard"] forState:UIControlStateSelected];
-    [styleChangeButton addTarget:self action:@selector(styleButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+    //早红马项目  --  关闭语音功能
+//    //change input type
+//    UIButton *styleChangeButton = [[UIButton alloc] init];
+//    styleChangeButton.accessibilityIdentifier = @"style";
+//    styleChangeButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
+//    [styleChangeButton setImage:[ZLEaseMessageManager imageWithCurrentBundleName:@"chatBar_record"] forState:UIControlStateNormal];
+//    [styleChangeButton setImage:[ZLEaseMessageManager imageWithCurrentBundleName:@"chatBar_keyboard"] forState:UIControlStateSelected];
+//    [styleChangeButton addTarget:self action:@selector(styleButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+//
+//    EaseChatToolbarItem *styleItem = [[EaseChatToolbarItem alloc] initWithButton:styleChangeButton withView:nil];
+//    [self setInputViewLeftItems:@[styleItem]];
     
-    EaseChatToolbarItem *styleItem = [[EaseChatToolbarItem alloc] initWithButton:styleChangeButton withView:nil];
-    [self setInputViewLeftItems:@[styleItem]];
     
-    //record
+    ///record
     self.recordButton = [[UIButton alloc] initWithFrame:self.inputTextView.frame];
     self.recordButton.accessibilityIdentifier = @"record";
     self.recordButton.titleLabel.font = [UIFont systemFontOfSize:15.0];
@@ -166,7 +168,7 @@
     [self.recordButton setTitle:kTouchToFinish forState:UIControlStateHighlighted];
     self.recordButton.hidden = YES;
     [self.recordButton addTarget:self action:@selector(recordButtonTouchDown) forControlEvents:UIControlEventTouchDown];
-    
+
     [self.recordButton addTarget:self action:@selector(recordButtonTouchDragExit) forControlEvents:UIControlEventTouchDragExit];
     [self.recordButton addTarget:self action:@selector(recordButtonTouchDragEnter) forControlEvents:UIControlEventTouchDragEnter];
     [self.recordButton addTarget:self action:@selector(recordButtonTouchUpOutside) forControlEvents:UIControlEventTouchUpOutside];
