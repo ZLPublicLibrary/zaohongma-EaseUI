@@ -176,6 +176,7 @@
 - (UIView *)unitView {
     if (!_unitView) {
         UIView *view = [[UIView alloc] initWithFrame:CGRectMake(15.0, 0, UIScreen.mainScreen.bounds.size.width - 30.0, 0)];
+        view.backgroundColor = [UIColor colorWithWhite:240 / 255.0 alpha:1.0];
         [self.contentView addSubview:view];
         _unitView = view;
     }
