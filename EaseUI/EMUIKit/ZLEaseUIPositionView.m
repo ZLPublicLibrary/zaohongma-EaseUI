@@ -11,19 +11,40 @@
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-        self.layer.cornerRadius = 5.0;
-        self.layer.masksToBounds = YES;
-        self.backgroundColor = UIColor.whiteColor;
+    
     }
     return self;
 }
 
 #pragma mark - Lazy
+- (UIImageView *)sendUserIconImageView {
+    if (!_sendUserIconImageView) {
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 40.0, 40.0)];
+        imageView.layer.cornerRadius = CGRectGetHeight(imageView.frame) / 2;
+        imageView.layer.masksToBounds = YES;
+        imageView.contentMode = UIViewContentModeScaleAspectFill;
+        imageView.backgroundColor = [UIColor colorWithWhite:0.97 alpha:1];
+        [self addSubview:imageView];
+        _sendUserIconImageView = imageView;
+    }
+    return _sendUserIconImageView;
+}
+- (UIView *)unitView {
+    if (!_unitView) {
+        UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width - 70.0, 155.0)];
+        view.layer.cornerRadius = 5.0;
+        view.layer.masksToBounds = YES;
+        view.backgroundColor = UIColor.whiteColor;
+        [self addSubview:view];
+        _unitView = view;
+    }
+    return _unitView;
+}
 - (UILabel *)titleLabel {
     if (!_titleLabel) {
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 15.0, CGRectGetWidth(self.frame) - 30.0 - 100.0, 30.0)];
-        label.font = [UIFont boldSystemFontOfSize:17.0];
-        [self addSubview:label];
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(16.0, 16.0, CGRectGetWidth(self.unitView.frame) - 32.0 - 100.0, 22.0)];
+        label.font = [UIFont boldSystemFontOfSize:16.0];
+        [self.unitView addSubview:label];
         _titleLabel = label;
     }
     return _titleLabel;
@@ -32,26 +53,16 @@
     if (!_priceLabel) {
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(self.titleLabel.frame) + 10.0, 15.0, 90.0, 30.0)];
         label.font = [UIFont boldSystemFontOfSize:15.0];
-        label.textColor = [UIColor colorWithRed:52 / 255.0 green:144 / 255.0 blue:239 / 255.0 alpha:1.0];
+        label.textColor = [UIColor colorWithRed:81 / 255.0 green:197 / 255.0 blue:181 / 255.0 alpha:100.0 / 255.0];
         label.textAlignment = NSTextAlignmentRight;
-        [self addSubview:label];
+        [self.unitView addSubview:label];
         _priceLabel = label;
     }
     return _priceLabel;
 }
-- (UILabel *)numberLabel {
-    if (!_numberLabel) {
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(15.0, CGRectGetMaxY(self.titleLabel.frame), CGRectGetWidth(self.frame) - 30.0, 20.0)];
-        label.font = [UIFont systemFontOfSize:14.0];
-        label.textColor = UIColor.grayColor;
-        [self addSubview:label];
-        _numberLabel = label;
-    }
-    return _numberLabel;
-}
 - (UIView *)claimView {
     if (!_claimView) {
-        UIView *view = [[UIView alloc] initWithFrame:CGRectMake(15.0, CGRectGetMaxY(self.numberLabel.frame) + 11.0, CGRectGetWidth(self.frame) - 30.0, 20.0)];
+        UIView *view = [[UIView alloc] initWithFrame:CGRectMake(16.0, CGRectGetMaxY(self.titleLabel.frame) + 10.0, CGRectGetWidth(self.unitView.frame) - 32.0, 20.0)];
         
         for (NSInteger index = 0; index < 3; index++) {
             UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
@@ -66,10 +77,19 @@
             [view addSubview:label];
         }
         
-        [self addSubview:view];
+        [self.unitView addSubview:view];
         _claimView = view;
     }
     return _claimView;
+}
+- (UILabel *)requireLabel {
+    if (!_requireLabel) {
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(16.0, CGRectGetMaxY(self.claimView.frame) + 15.0, CGRectGetWidth(self.unitView.frame) - 32.0, 20.0)];
+        label.numberOfLines = 0;
+        [self.unitView addSubview:label];
+        _requireLabel = label;
+    }
+    return _requireLabel;
 }
 
 @end

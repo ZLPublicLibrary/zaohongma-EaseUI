@@ -72,7 +72,9 @@
         self.onlineResumeView.titleLabel.text = model.message.ext[@"name"];
         self.onlineResumeView.positionLabel.text = model.message.ext[@"position"];
         self.onlineResumeView.compensationLabel.text = model.message.ext[@"salary"];
-        
+        self.onlineResumeView.unitView.frame = CGRectMake(model.isSender ? 10.0 : 60.0, self.onlineResumeView.unitView.frame.origin.y, self.onlineResumeView.unitView.frame.size.width, self.onlineResumeView.unitView.frame.size.height);
+        self.onlineResumeView.sendUserIconImageView.frame = CGRectMake(model.isSender ? UIScreen.mainScreen.bounds.size.width - 50.0 : 10.0, self.onlineResumeView.sendUserIconImageView.frame.origin.y, self.onlineResumeView.sendUserIconImageView.frame.size.width, self.onlineResumeView.sendUserIconImageView.frame.size.height);
+        self.onlineResumeView.sendUserIconImageView.image = model.isSender ? [ZLEaseMessageManager shared].myIcon : [ZLEaseMessageManager shared].sideIcon;
         NSString *education = model.message.ext[@"education"];
         CGFloat educationWidth = [education boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:(NSStringDrawingUsesLineFragmentOrigin) attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12.0]} context:nil].size.width;
         UILabel *label = self.onlineResumeView.claimView.subviews.firstObject;
@@ -93,20 +95,52 @@
     }else if (type == 2) {//附件
         self.adjunctResumeView.hidden = NO;
         self.adjunctResumeView.iconImageView.image = model.isSender ? [ZLEaseMessageManager shared].myIcon : [ZLEaseMessageManager shared].sideIcon;
-        self.adjunctResumeView.iconImageView.frame = CGRectMake(model.isSender ? CGRectGetWidth(self.adjunctResumeView.frame) - 55.0 : 15.0, 0, 40.0, 40.0);
-        self.adjunctResumeView.unitView.frame = CGRectMake(model.isSender ? CGRectGetWidth(self.adjunctResumeView.frame) - 15.0 - 40.0 - 5.0 - 249.0 : 15.0 + 40.0 + 5.0, 0, 249.0, 62.0);
+        self.adjunctResumeView.iconImageView.frame = CGRectMake(model.isSender ? CGRectGetWidth(self.adjunctResumeView.frame) - 50.0 : 10.0, 0, 40.0, 40.0);
+        self.adjunctResumeView.unitView.frame = CGRectMake(model.isSender ? CGRectGetWidth(self.adjunctResumeView.frame) - 10.0 - 40.0 - 10.0 - 249.0 : 10.0 + 40.0 + 10.0, 0, 249.0, 62.0);
         UIImage *image = [ZLEaseMessageManager imageWithCurrentBundleName:model.isSender ? @"chat_sender_bg" : @"chat_receiver_bg"];
         self.adjunctResumeView.unitView.image = [image resizableImageWithCapInsets:UIEdgeInsetsMake(30.0, model.isSender ? 5.0 : 10.0, 5.0, model.isSender ? 10.0 : 5.0) resizingMode:(UIImageResizingModeStretch)];
         self.adjunctResumeView.titleLabel.text = model.message.ext[@"title"];
         self.adjunctResumeView.subTitleLabel.text = model.message.ext[@"size"];
     }else if (type == 3) {//面试邀请
         self.interviewInvitationView.hidden = NO;
-        self.interviewInvitationView.titleLabel.text = model.isSender ? @"您给对方发送了一份面试邀请" : @"对方给您发送了一份面试邀请";
+        self.interviewInvitationView.sendUserIconImageView.frame = CGRectMake(model.isSender ? UIScreen.mainScreen.bounds.size.width - 50.0 : 10.0, self.interviewInvitationView.sendUserIconImageView.frame.origin.y, self.interviewInvitationView.sendUserIconImageView.frame.size.width, self.interviewInvitationView.sendUserIconImageView.frame.size.height);
+        self.interviewInvitationView.sendUserIconImageView.image = model.isSender ? [ZLEaseMessageManager shared].myIcon : [ZLEaseMessageManager shared].sideIcon;
+        self.interviewInvitationView.timeView.content = model.message.ext[@"interview_time"];
+        self.interviewInvitationView.addressView.content = model.message.ext[@"site"];
+        self.interviewInvitationView.addressView.frame = CGRectMake(self.interviewInvitationView.addressView.frame.origin.x, CGRectGetMaxY(self.interviewInvitationView.timeView.frame) + 8.0, self.interviewInvitationView.addressView.frame.size.width, self.interviewInvitationView.addressView.frame.size.height);
+        self.interviewInvitationView.nameView.content = model.message.ext[@"name"];
+        self.interviewInvitationView.nameView.frame = CGRectMake(self.interviewInvitationView.nameView.frame.origin.x, CGRectGetMaxY(self.interviewInvitationView.addressView.frame) + 8.0, self.interviewInvitationView.nameView.frame.size.width, self.interviewInvitationView.nameView.frame.size.height);
+        self.interviewInvitationView.phoneView.content = model.message.ext[@"mobile"];
+        self.interviewInvitationView.phoneView.frame = CGRectMake(self.interviewInvitationView.phoneView.frame.origin.x, CGRectGetMaxY(self.interviewInvitationView.nameView.frame) + 8.0, self.interviewInvitationView.phoneView.frame.size.width, self.interviewInvitationView.phoneView.frame.size.height);
+        self.interviewInvitationView.remarksView.content = model.message.ext[@"remarks"];
+        self.interviewInvitationView.remarksView.frame = CGRectMake(self.interviewInvitationView.remarksView.frame.origin.x, CGRectGetMaxY(self.interviewInvitationView.phoneView.frame) + 8.0, self.interviewInvitationView.remarksView.frame.size.width, self.interviewInvitationView.remarksView.frame.size.height);
+        self.interviewInvitationView.unitView.frame = CGRectMake(model.isSender ? 10.0 : 60.0, self.interviewInvitationView.unitView.frame.origin.y, self.interviewInvitationView.unitView.frame.size.width, CGRectGetMaxY(self.interviewInvitationView.remarksView.frame) + 16.0);
+        self.interviewInvitationView.frame = CGRectMake(self.interviewInvitationView.frame.origin.x, self.interviewInvitationView.frame.origin.y, self.interviewInvitationView.frame.size.width, CGRectGetMaxY(self.interviewInvitationView.unitView.frame));
     }else if (type == 4) {//职位
         self.positionView.hidden = NO;
         self.positionView.titleLabel.text = model.message.ext[@"title"];
         self.positionView.priceLabel.text = model.message.ext[@"salary"];
-        self.positionView.numberLabel.text = model.message.ext[@"CorporateName"];
+        self.positionView.sendUserIconImageView.frame = CGRectMake(model.isSender ? UIScreen.mainScreen.bounds.size.width - 50.0 : 10.0, self.positionView.sendUserIconImageView.frame.origin.y, self.positionView.sendUserIconImageView.frame.size.width, self.positionView.sendUserIconImageView.frame.size.height);
+        self.positionView.sendUserIconImageView.image = model.isSender ? [ZLEaseMessageManager shared].myIcon : [ZLEaseMessageManager shared].sideIcon;
+        
+        NSString *string = model.message.ext[@"jobDescription"];
+        CGFloat height = 0;
+        if (string) {
+            NSMutableAttributedString *attrM = [[NSMutableAttributedString alloc] initWithString:string];
+            NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+            style.lineSpacing = 5.0;
+            [attrM addAttribute:NSParagraphStyleAttributeName value:style range:NSMakeRange(0, string.length)];
+            [attrM addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"PingFangSC-Light" size:15.0] range:NSMakeRange(0, attrM.string.length)];
+            [attrM addAttribute:NSForegroundColorAttributeName value:UIColor.blackColor range:NSMakeRange(0, attrM.string.length)];
+            self.positionView.requireLabel.attributedText = attrM;
+            
+            height = [string boundingRectWithSize:CGSizeMake(UIScreen.mainScreen.bounds.size.width - 70.0 - 32.0, MAXFLOAT) options:(NSStringDrawingUsesLineFragmentOrigin) attributes:@{NSFontAttributeName : [UIFont fontWithName:@"PingFangSC-Light" size:15.0],NSParagraphStyleAttributeName:style} context:nil].size.height;
+            
+            self.positionView.requireLabel.frame = CGRectMake(self.positionView.requireLabel.frame.origin.x, self.positionView.requireLabel.frame.origin.y, self.positionView.requireLabel.frame.size.width, height);
+            
+        }
+        
+        self.positionView.unitView.frame = CGRectMake(model.isSender ? 10.0 : 60.0, self.positionView.unitView.frame.origin.y, self.positionView.unitView.frame.size.width, 97.0 + height);
         
         NSString *education = model.message.ext[@"workplace"];
         CGFloat educationWidth = [education boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:(NSStringDrawingUsesLineFragmentOrigin) attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12.0]} context:nil].size.width;
@@ -161,21 +195,33 @@
     NSInteger type = [model.message.ext[@"type"] integerValue];
     CGFloat bottomInset = 15.0;
     if (type == 1) {
-        return 140.0 + bottomInset;
+        return 155.0 + bottomInset;
     }
     if (type == 2) {
         return 62.0 + bottomInset;
     }
     if (type == 3) {
-        return 80.0 + bottomInset;
+        CGFloat timeHeight = [ZLEaseUIInterviewInvitationItemView getHeightWithContent:model.message.ext[@"interview_time"]];
+        CGFloat addressHeight = [ZLEaseUIInterviewInvitationItemView getHeightWithContent:model.message.ext[@"site"]];
+        CGFloat nameHeight = [ZLEaseUIInterviewInvitationItemView getHeightWithContent:model.message.ext[@"name"]];
+        CGFloat phoneHeight = [ZLEaseUIInterviewInvitationItemView getHeightWithContent:model.message.ext[@"mobile"]];
+        CGFloat remarksHeight = [ZLEaseUIInterviewInvitationItemView getHeightWithContent:model.message.ext[@"remarks"]];
+        return 16.0 + 22.0 + 15.0 + timeHeight + 8.0 + addressHeight + 8.0 + nameHeight + 8.0 + phoneHeight + 8.0 + remarksHeight + 16.0 + bottomInset;
     }
-    return 115.0 + bottomInset;
+    CGFloat height = 0;
+    NSString *jobDescription = model.message.ext[@"jobDescription"];
+    if (jobDescription) {
+        NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+        style.lineSpacing = 5.0;
+        height = [jobDescription boundingRectWithSize:CGSizeMake(UIScreen.mainScreen.bounds.size.width - 70.0 - 32.0, MAXFLOAT) options:(NSStringDrawingUsesLineFragmentOrigin) attributes:@{NSFontAttributeName : [UIFont fontWithName:@"PingFangSC-Light" size:15.0],NSParagraphStyleAttributeName:style} context:nil].size.height;
+    }
+    return 97.0 + height + bottomInset;
 }
 
 #pragma mark - Lazy
 - (UIView *)unitView {
     if (!_unitView) {
-        UIView *view = [[UIView alloc] initWithFrame:CGRectMake(15.0, 0, UIScreen.mainScreen.bounds.size.width - 30.0, 0)];
+        UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, 0)];
         view.backgroundColor = [UIColor colorWithWhite:240 / 255.0 alpha:1.0];
         [self.contentView addSubview:view];
         _unitView = view;
@@ -184,7 +230,7 @@
 }
 - (ZLEaseUIOnlineResumeView *)onlineResumeView {
     if (!_onlineResumeView) {
-        ZLEaseUIOnlineResumeView *view = [[ZLEaseUIOnlineResumeView alloc] initWithFrame:CGRectMake(15.0, 0, CGRectGetWidth(self.unitView.frame) - 30.0, 140.0)];
+        ZLEaseUIOnlineResumeView *view = [[ZLEaseUIOnlineResumeView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.unitView.frame), 155.0)];
         [view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onlineResumeViewAction)]];
         [self.unitView addSubview:view];
         _onlineResumeView = view;
@@ -202,7 +248,7 @@
 }
 - (ZLEaseUIPositionView *)positionView {
     if (!_positionView) {
-        ZLEaseUIPositionView *view = [[ZLEaseUIPositionView alloc] initWithFrame:CGRectMake(15.0, 0, CGRectGetWidth(self.unitView.frame) - 30.0, 115.0)];
+        ZLEaseUIPositionView *view = [[ZLEaseUIPositionView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.unitView.frame) - 70.0, 115.0)];
         [view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(positionViewAction)]];
         [self.unitView addSubview:view];
         _positionView = view;
@@ -211,7 +257,7 @@
 }
 - (ZLEaseUIInterviewInvitationView *)interviewInvitationView {
     if (!_interviewInvitationView) {
-        ZLEaseUIInterviewInvitationView *view = [[ZLEaseUIInterviewInvitationView alloc] initWithFrame:CGRectMake(15.0, 0, CGRectGetWidth(self.unitView.frame) - 30.0, 80.0)];
+        ZLEaseUIInterviewInvitationView *view = [[ZLEaseUIInterviewInvitationView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.unitView.frame), 80.0)];
         [view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(interviewInvitationViewAction)]];
         [self.unitView addSubview:view];
         _interviewInvitationView = view;

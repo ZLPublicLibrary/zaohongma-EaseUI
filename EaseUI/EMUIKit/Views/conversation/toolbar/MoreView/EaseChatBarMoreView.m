@@ -249,7 +249,7 @@
     [btn setTitleColor:[UIColor colorWithRed:99 / 255.0 green:99 / 255.0 blue:99 / 255.0 alpha:1.0] forState:UIControlStateNormal];
     btn.titleLabel.font = [UIFont systemFontOfSize: 12.0];
     btn.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 20, 0);
-    btn.titleEdgeInsets = UIEdgeInsetsMake(31, -60, -26, 0);
+    btn.titleEdgeInsets = UIEdgeInsetsMake(31, -50, -26, 0);
     return btn;
 }
 

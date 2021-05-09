@@ -11,7 +11,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface ZLEaseUIOnlineResumeView : UIView
 
-///头像
+///发布者头像
+@property (nonatomic,weak) UIImageView *sendUserIconImageView;
+///单元视图
+@property (nonatomic,weak) UIView *unitView;
+///简历者头像
 @property (nonatomic,weak) UIImageView *iconImageView;
 ///姓名
 @property (nonatomic,weak) UILabel *titleLabel;

@@ -11,12 +11,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface ZLEaseUIPositionView : UIView
 
+///发布者头像
+@property (nonatomic,weak) UIImageView *sendUserIconImageView;
+///单元视图
+@property (nonatomic,weak) UIView *unitView;
 ///职位
 @property (nonatomic,weak) UILabel *titleLabel;
 ///工资
 @property (nonatomic,weak) UILabel *priceLabel;
-///融资情况、公司人数
-@property (nonatomic,weak) UILabel *numberLabel;
+///要求
+@property (nonatomic,weak) UILabel *requireLabel;
 ///基本要求
 @property (nonatomic,weak) UIView *claimView;
 

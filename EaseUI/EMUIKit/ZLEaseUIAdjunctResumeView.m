@@ -20,7 +20,7 @@
 #pragma mark - Lazy
 - (UIImageView *)iconImageView {
     if (!_iconImageView) {
-        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(15.0, 0, 40.0, 40.0)];
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(10.0, 0, 40.0, 40.0)];
         imageView.layer.cornerRadius = CGRectGetHeight(imageView.frame) / 2;
         imageView.layer.masksToBounds = YES;
         imageView.contentMode = UIViewContentModeScaleAspectFill;
